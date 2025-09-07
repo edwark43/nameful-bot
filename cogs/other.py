@@ -29,18 +29,18 @@ class Other(commands.Cog):
 
     pingHunter = discord.SlashCommandGroup("ping-hunter", ":troll~1:")
 
-    @pingHunter.command(name="on", description=":troll~1:")
+    @pingHunter.command(name="on", description=":troll:")
     @commands.guild_only()
     @commands.has_role(int(os.getenv("ADMIN_ROLE_ID")))
     async def onPingHunter(self, ctx):
-        ctx.respond("<:troll~1:1414011614256173107>", ephemeral=True)
+        await ctx.respond("<:troll:1414011614256173107>", ephemeral=True)
         self.ping_hunter_task.start()
 
     @pingHunter.command(name="off", description="😞")
     @commands.guild_only()
     @commands.has_role(int(os.getenv("ADMIN_ROLE_ID")))
     async def offPingHunter(self, ctx):
-        ctx.respond("😞", ephemeral=True)
+        await ctx.respond("😞", ephemeral=True)
         self.ping_hunter_task.stop()
 
     @tasks.loop(seconds=1)
