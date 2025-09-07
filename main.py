@@ -1,22 +1,26 @@
-import os, discord, random, utils
-from dotenv import load_dotenv
+import os, discord
+from discord.ext import tasks, commands
+from dotenv.main import set_key, load_dotenv, find_dotenv
 
-load_dotenv()
+dotenv_path = find_dotenv("../.env")
+load_dotenv(dotenv_path)
 
-bot = discord.Bot()
-hunter = "<@1104370538706632735>"
-hunterSweetTalk = [f"Come back {hunter}, I miss you so much.", f"I will kill myself, {hunter}, if you don't come back.", f"{hunter}, the entirety of New Nameful yearns for your return."]
+bot = discord.Bot(intents=discord.Intents.all())
 
 @bot.event
 async def on_ready():
     print(f"{bot.user} has started.")
 
-@bot.slash_command(name="pinghunter", description="Please come back forever :(")
-async def pinghunter(ctx: discord.ApplicationContext):
-    await ctx.respond(random.choice(hunterSweetTalk))
+cogs_list = [
+    "leadership",
+    "election",
+    "member_list",
+    "constitution",
+    "news_notice",
+    "other"
+]
 
-@bot.slash_command(name="election", description="Show New Nameful Election Info")
-async def election(ctx: discord.ApplicationContext):
-    await ctx.respond("The next election will start in " + str(utils.calculate_countdown(utils.get_json()["election"]["electionDate"])-7) + " days!\nThe new leaders will be appointed in " + str(utils.calculate_countdown(utils.get_json()["election"]["electionDate"])) + " days.")
+for cog in cogs_list:
+    bot.load_extension(f"cogs.{cog}")
 
 bot.run(os.getenv("TOKEN"))
